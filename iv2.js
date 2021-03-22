@@ -7,32 +7,62 @@
     </div>
  */
 
-var btn1 = document.getElementById('button1');
-var btn2 = document.getElementById('button2');
+ let btn1 = document.querySelector('#button1');
+ let btn2 = document.querySelector('#button2');
 
-addListener(btn1, 'click', function (event) {
-    btn1.parentNode.insertBefore(btn2, btn1);
-});
-
-function addListener(elem, type, handler) {
-    if (elem.addEventListener) {
-        elem.addEventListener(type, handler, false);
-        return handler;
-    } else if (elem.attachEvent) {
-        function wrapper() {
-            var event = window.event;
-            event.target = event.srcElement;
-            handler.call(elem, event);
-        }
-        elem.attachEvent('on' + type, wrapper);
-        return wrapper;
-    }
-}
+ btn1.addEventListener('click', ()=>{
+  btn1.parentNode.insertBefore(btn2, btn1);
+  }, false);
 
 /**
  * question 2
  * 网页中实现一个计算当年还剩多少时间的倒数计时程序,要求网页上实时动态显示"×× 年还剩 ×× 天 ×× 时 ×× 分 ×× 秒"
  */
+
+  <span id="target"></span>
+
+  // 为了简化。每月默认30天
+  function getTimeString() {
+    var start = new Date();
+    var end = new Date(start.getFullYear() + 1, 0, 1);
+    var elapse = Math.floor((end - start) / 1000);
+
+    var seconds = elapse % 60 ;
+    var minutes = Math.floor(elapse / 60) % 60;
+    var hours = Math.floor(elapse / (60 * 60)) % 24;
+    var days = Math.floor(elapse / (60 * 60 * 24)) % 30;
+    var months = Math.floor(elapse / (60 * 60 * 24 * 30)) % 12;
+    var years = Math.floor(elapse / (60 * 60 * 24 * 30 * 12));
+
+    return start.getFullYear() + '年还剩' + years + '年' + months + '月' + days + '日'
+        + hours + '小时' + minutes + '分' + seconds + '秒';
+  }
+
+  function domText(elem, text) {
+      if (text == undefined) {
+
+          if (elem.textContent) {
+              return elem.textContent;
+          } else if (elem.innerText) {
+              return elem.innerText;
+          }
+      } else {
+          if (elem.textContent) {
+              elem.textContent = text;
+          } else if (elem.innerText) {
+              elem.innerText = text;
+          } else {
+              elem.innerHTML = text;
+          }
+      }
+  }
+
+  var target = document.getElementById('target');
+
+  setInterval(function () {
+      domText(target, getTimeString());
+  }, 1000)
+
 
 
 /** 
